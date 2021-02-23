@@ -2,31 +2,52 @@
 #include <fstream>
 #include <vector>
 
-#include "computations/LineHandler.h"
-#include "geometry/Line.h"
+#include "computations/WallsAndPointsProcessor.h"
+#include "geometry/Wall.h"
+
+/*
+ * Сухомлинов Дмитрий, ММФ НГУ, 4 курс, 17121
+ * 
+ * Общая идея решения - фактически, входные данные представляют из себя витееватое задание графа.
+ * Двери в стенах хранилища - это его вершины. Так же вершиной является точка, где находятся сокровища.
+ * Внутри каждой комнаты все двери соединены между собой, образуя ребра графа. Исключение - комната с сокровищем, там достаточно соединить двери только с местоположением сокровища.
+ * Нужно построить этот граф и используя поиск в графе найти кратчайий путь от вершины, которая является местоположением сокровища, до любой из вершин, находящихся на "внешних стенах" пирамиды.
+ * Оптимальнее будет использовать поиск "в ширину", т.к. при таком поиске первый же найденный путь является кратчайшим, а при поиске "в глубину" необходимо сначала найти все пути, а потом сравнить их.
+ * 
+ */
 
 int main() {
-    int linesNumber = 0;
+    int wallsNumber = 0;
     std::ifstream fin("input.txt");
-    fin >> linesNumber;
-    TH::LineHandler lineHandler;
-    for (int i = 0; i < linesNumber; i++) {
+    //Считываем количество стен
+    fin >> wallsNumber;
+    //Создаем обработчик, который будет заниматься всеми вычислениями
+    TH::WallsAndPointsProcessor processor;
+    for (int i = 0; i < wallsNumber; i++) {
         double x1 = 0;
         double y1 = 0;
         double x2 = 0;
         double y2 = 0;
+        //Считываем координаты стены
         fin >> x1 >> y1 >> x2 >> y2;
         
-        lineHandler.addLine(TH::Line(TH::Point(x1, y1), TH::Point(x2, y2)));
+        //Добавляем новую стену в обработчик
+        processor.addWall(TH::Wall(TH::Point(x1, y1), TH::Point(x2, y2)));
     }
-    lineHandler.findNodes();
+    //Находим предполагаемые местоположения всех дверей в стенах
+    processor.findDoorLocations();
 
     double xTresure = 0;
     double yTreasure = 0;
+    //Считываем координаты сокровища
     fin >> xTresure >> yTreasure;
-    lineHandler.buildAdjacencyMatrix(TH::Point(xTresure, yTreasure));
+    //Рассчитываем всевозможные пути до сокровища через всевозможные двери, т.е. строим граф
+    processor.calculateInternalStructureOfPyramid(TH::Point(xTresure, yTreasure));
 
-    auto numberOfDoors = lineHandler.findShortestWayByBfs();
+    //Используя поиск в ширину находим кратчайший путь в графе от вершины, которая является координатами сокровища, до любое вершины, лежащей на внешних стенах.
+    auto numberOfDoors = processor.findShortestWayByBfs();
 
     std::cout << "Number of doors = " << numberOfDoors << std::endl;
+
+    return 0;
 }

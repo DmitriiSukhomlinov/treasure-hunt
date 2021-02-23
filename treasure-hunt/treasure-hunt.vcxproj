@@ -19,17 +19,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\computations\LineHandler.cpp" />
-    <ClCompile Include="src\geometry\Line.cpp" />
+    <ClCompile Include="src\computations\WallsAndPointsProcessor.cpp" />
+    <ClCompile Include="src\geometry\DoorPointWithSurroundingLines.cpp" />
     <ClCompile Include="src\geometry\Point.cpp" />
-    <ClCompile Include="src\geometry\PointBetweenLines.cpp" />
+    <ClCompile Include="src\geometry\Wall.cpp" />
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\computations\LineHandler.h" />
-    <ClInclude Include="src\geometry\Line.h" />
+    <ClInclude Include="src\computations\WallsAndPointsProcessor.h" />
+    <ClInclude Include="src\geometry\DoorPointWithSurroundingLines.h" />
     <ClInclude Include="src\geometry\Point.h" />
-    <ClInclude Include="src\geometry\PointBetweenLines.h" />
+    <ClInclude Include="src\geometry\Wall.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
