@@ -16,9 +16,26 @@
  * 
  */
 
-int main() {
+
+int main(int argc, char* argv[]) {
+    //Меню помощи
+    if (argc == 1) {
+        std::cout << "Treasure Hunt." << std::endl;
+        std::cout << std::endl;
+        std::cout << "[OPTION] - Path to the input file. The only argument." << std::endl;
+        std::cout << "Example: \"treasure-hunt.exe C:\\inputs\\input.txt\"." << std::endl;
+        return 0;
+    }
+
+    //Аргументов должно быть 2
+    if (argc != 2) {
+        std::cout << "Incorrect input." << std::endl;
+        return 1 ;
+    }
+
+    //Я решил не делать проверку "на дурака", будем считать, что у нас всегда корректный формат входного файла.
     int wallsNumber = 0;
-    std::ifstream fin("input.txt");
+    std::ifstream fin(argv[1]);
     //Считываем количество стен
     fin >> wallsNumber;
     //Создаем обработчик, который будет заниматься всеми вычислениями
@@ -41,6 +58,7 @@ int main() {
     double yTreasure = 0;
     //Считываем координаты сокровища
     fin >> xTresure >> yTreasure;
+    fin.close();
     //Рассчитываем всевозможные пути до сокровища через всевозможные двери, т.е. строим граф
     processor.calculateInternalStructureOfPyramid(TH::Point(xTresure, yTreasure));
 
