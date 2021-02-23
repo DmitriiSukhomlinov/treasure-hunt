@@ -49,3 +49,7 @@ in the format shown below.
 
 # Sample Output
 Number of doors = 2
+
+# Requirements
+* Windows 10
+* Microsoft Visual Studio 2019
