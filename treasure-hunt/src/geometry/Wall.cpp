@@ -12,7 +12,7 @@ const Wall Wall::LEFT(Point(0, 0), Point(0, 100));
 Wall::Wall(const Point& _point1, const Point& _point2) 
     : point1(_point1), point2(_point2) {
 
-    //По двум точкам находим коэффициенты уравнения прямой
+    //РџРѕ РґРІСѓРј С‚РѕС‡РєР°Рј РЅР°С…РѕРґРёРј РєРѕСЌС„С„РёС†РёРµРЅС‚С‹ СѓСЂР°РІРЅРµРЅРёСЏ РїСЂСЏРјРѕР№
     auto x1 = point1.getX();
     auto y1 = point1.getY();
     auto x2 = point2.getX();
@@ -32,7 +32,7 @@ Wall::~Wall() {
 Wall::Wall(const Wall& other) 
     : Wall(other.point1, other.point2) {
     this->intersectionPointsAndWallsTheyIntersectsOn = other.intersectionPointsAndWallsTheyIntersectsOn;
-    //Копируем данные объекта, выделяем память
+    //РљРѕРїРёСЂСѓРµРј РґР°РЅРЅС‹Рµ РѕР±СЉРµРєС‚Р°, РІС‹РґРµР»СЏРµРј РїР°РјСЏС‚СЊ
     for (auto m : other.doorPoints) {
         this->doorPoints.push_back(new DoorPointWithSurroundingLines(*m));
     }
@@ -41,17 +41,17 @@ Wall::Wall(const Wall& other)
 Wall::Wall(Wall&& other) noexcept 
     : Wall(other.point1, other.point2) {
     this->intersectionPointsAndWallsTheyIntersectsOn = other.intersectionPointsAndWallsTheyIntersectsOn;
-    //Перемещаем данные временного объекта...
+    //РџРµСЂРµРјРµС‰Р°РµРј РґР°РЅРЅС‹Рµ РІСЂРµРјРµРЅРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°...
     for (auto m : other.doorPoints) {
         this->doorPoints.push_back(m);
     }
-    //... и очищаем исходный временный объект
+    //... Рё РѕС‡РёС‰Р°РµРј РёСЃС…РѕРґРЅС‹Р№ РІСЂРµРјРµРЅРЅС‹Р№ РѕР±СЉРµРєС‚
     other.doorPoints.clear();
 }
 
 Wall& Wall::operator=(const Wall& other) {
     if (*this == other) {
-        //Проверка на самоприсваивание
+        //РџСЂРѕРІРµСЂРєР° РЅР° СЃР°РјРѕРїСЂРёСЃРІР°РёРІР°РЅРёРµ
         return *this;
     }
 
@@ -61,7 +61,7 @@ Wall& Wall::operator=(const Wall& other) {
     this->b = other.b;
     this->c = other.c;
     this->intersectionPointsAndWallsTheyIntersectsOn = other.intersectionPointsAndWallsTheyIntersectsOn;
-    //Копируем данные объекта, выделяем память
+    //РљРѕРїРёСЂСѓРµРј РґР°РЅРЅС‹Рµ РѕР±СЉРµРєС‚Р°, РІС‹РґРµР»СЏРµРј РїР°РјСЏС‚СЊ
     for (auto m : other.doorPoints) {
         this->doorPoints.push_back(new DoorPointWithSurroundingLines(*m));
     }
@@ -71,7 +71,7 @@ Wall& Wall::operator=(const Wall& other) {
 
 Wall& Wall::operator=(Wall&& other) noexcept {
     if (*this == other) {
-        //Проверка на самоприсваивание
+        //РџСЂРѕРІРµСЂРєР° РЅР° СЃР°РјРѕРїСЂРёСЃРІР°РёРІР°РЅРёРµ
         return *this;
     }
 
@@ -81,55 +81,55 @@ Wall& Wall::operator=(Wall&& other) noexcept {
     this->b = other.b;
     this->c = other.c;
     this->intersectionPointsAndWallsTheyIntersectsOn = other.intersectionPointsAndWallsTheyIntersectsOn;
-    //Перемещаем данные временного объекта...
+    //РџРµСЂРµРјРµС‰Р°РµРј РґР°РЅРЅС‹Рµ РІСЂРµРјРµРЅРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°...
     for (auto m : other.doorPoints) {
         this->doorPoints.push_back(m);
     }
-    //... и очищаем исходный временный объект
+    //... Рё РѕС‡РёС‰Р°РµРј РёСЃС…РѕРґРЅС‹Р№ РІСЂРµРјРµРЅРЅС‹Р№ РѕР±СЉРµРєС‚
     other.doorPoints.clear();
 
     return *this;
 }
 
 bool Wall::operator==(const Wall& other) const {
-    //Для равенства достаточно считать, что изначальные точки были равны.
+    //Р”Р»СЏ СЂР°РІРµРЅСЃС‚РІР° РґРѕСЃС‚Р°С‚РѕС‡РЅРѕ СЃС‡РёС‚Р°С‚СЊ, С‡С‚Рѕ РёР·РЅР°С‡Р°Р»СЊРЅС‹Рµ С‚РѕС‡РєРё Р±С‹Р»Рё СЂР°РІРЅС‹.
     return this->point1 == other.point1 && this->point2 == other.point2;
 }
 
 void Wall::findIntersectionPoint(Wall* other) {
-    //Фактически, нужно решить систему из двух линейных уравнений такого вида:
+    //Р¤Р°РєС‚РёС‡РµСЃРєРё, РЅСѓР¶РЅРѕ СЂРµС€РёС‚СЊ СЃРёСЃС‚РµРјСѓ РёР· РґРІСѓС… Р»РёРЅРµР№РЅС‹С… СѓСЂР°РІРЅРµРЅРёР№ С‚Р°РєРѕРіРѕ РІРёРґР°:
     // (a1 b1)  x = c1
     // (a2 b2)  y = c2
-    //Считаем определитель матрицы
+    //РЎС‡РёС‚Р°РµРј РѕРїСЂРµРґРµР»РёС‚РµР»СЊ РјР°С‚СЂРёС†С‹
     const auto determinant = this->a * other->b - this->b * other->a;
     if (determinant == 0) {
-        //Матрица вырождена, линии параллельны
+        //РњР°С‚СЂРёС†Р° РІС‹СЂРѕР¶РґРµРЅР°, Р»РёРЅРёРё РїР°СЂР°Р»Р»РµР»СЊРЅС‹
         return;
     }
 
-    //Находим точки пересечения
+    //РќР°С…РѕРґРёРј С‚РѕС‡РєРё РїРµСЂРµСЃРµС‡РµРЅРёСЏ
     const double xIntersectionPoint = (this->b * other->c - other->b * this->c) / determinant;
     const double yIntersectionPoint = (other->a * this->c - this->a * other->c) / determinant;
 
     if (xIntersectionPoint < 0 || xIntersectionPoint > 100
         || yIntersectionPoint < 0 || yIntersectionPoint > 100) {
-        //Точка пересечения находится вне квадрата, в котором мы ищем решения
+        //РўРѕС‡РєР° РїРµСЂРµСЃРµС‡РµРЅРёСЏ РЅР°С…РѕРґРёС‚СЃСЏ РІРЅРµ РєРІР°РґСЂР°С‚Р°, РІ РєРѕС‚РѕСЂРѕРј РјС‹ РёС‰РµРј СЂРµС€РµРЅРёСЏ
         return;
     }
 
     auto point = Point(xIntersectionPoint, yIntersectionPoint);
 
-    //Добавляем в результат точку и стену, при пересечении с которой эта точка обраЗуется
+    //Р”РѕР±Р°РІР»СЏРµРј РІ СЂРµР·СѓР»СЊС‚Р°С‚ С‚РѕС‡РєСѓ Рё СЃС‚РµРЅСѓ, РїСЂРё РїРµСЂРµСЃРµС‡РµРЅРёРё СЃ РєРѕС‚РѕСЂРѕР№ СЌС‚Р° С‚РѕС‡РєР° РѕР±СЂР°Р—СѓРµС‚СЃСЏ
     std::pair<Point, Wall*> p(point, other);
     intersectionPointsAndWallsTheyIntersectsOn.push_back(p);
 }
 
 void Wall::sortIntersectionPointsAlongWall() {
-    //Соортируем используя функцию стандартной библиотеки
-    //Завявленная вычислительная сложность - O(N*logN)
+    //РЎРѕРѕСЂС‚РёСЂСѓРµРј РёСЃРїРѕР»СЊР·СѓСЏ С„СѓРЅРєС†РёСЋ СЃС‚Р°РЅРґР°СЂС‚РЅРѕР№ Р±РёР±Р»РёРѕС‚РµРєРё
+    //Р—Р°РІСЏРІР»РµРЅРЅР°СЏ РІС‹С‡РёСЃР»РёС‚РµР»СЊРЅР°СЏ СЃР»РѕР¶РЅРѕСЃС‚СЊ - O(N*logN)
     std::sort(intersectionPointsAndWallsTheyIntersectsOn.begin(), intersectionPointsAndWallsTheyIntersectsOn.end(), 
         [&](const std::pair<Point, Wall*>& first, const std::pair<Point, Wall*>& second) -> bool {
-        //Сравниваем расстояния до одной из точек, лежащих на внешей стене. Путь это будет point1.
+        //РЎСЂР°РІРЅРёРІР°РµРј СЂР°СЃСЃС‚РѕСЏРЅРёСЏ РґРѕ РѕРґРЅРѕР№ РёР· С‚РѕС‡РµРє, Р»РµР¶Р°С‰РёС… РЅР° РІРЅРµС€РµР№ СЃС‚РµРЅРµ. РџСѓС‚СЊ СЌС‚Рѕ Р±СѓРґРµС‚ point1.
         auto distanceFromPoint1ToFirst = point1.distance(first.first);
         auto distanceFromPoint1ToSecond = point1.distance(second.first);
         return distanceFromPoint1ToFirst < distanceFromPoint1ToSecond;
@@ -137,20 +137,20 @@ void Wall::sortIntersectionPointsAlongWall() {
 }
 
 void Wall::findDoorPoints() {
-    //Пробегаемся по всем точкам пересечения этой стены с другими стенами (идем только до size()-1, т.к. в самом цикле есть i+1)
+    //РџСЂРѕР±РµРіР°РµРјСЃСЏ РїРѕ РІСЃРµРј С‚РѕС‡РєР°Рј РїРµСЂРµСЃРµС‡РµРЅРёСЏ СЌС‚РѕР№ СЃС‚РµРЅС‹ СЃ РґСЂСѓРіРёРјРё СЃС‚РµРЅР°РјРё (РёРґРµРј С‚РѕР»СЊРєРѕ РґРѕ size()-1, С‚.Рє. РІ СЃР°РјРѕРј С†РёРєР»Рµ РµСЃС‚СЊ i+1)
     for (int i = 0; i < (int)intersectionPointsAndWallsTheyIntersectsOn.size() - 1; i++) {
-        //Берем точки пересечения с индексами i и i+1.
-        //Т.к. они были отсортированы, гарантированно это углы одной комнаты.
+        //Р‘РµСЂРµРј С‚РѕС‡РєРё РїРµСЂРµСЃРµС‡РµРЅРёСЏ СЃ РёРЅРґРµРєСЃР°РјРё i Рё i+1.
+        //Рў.Рє. РѕРЅРё Р±С‹Р»Рё РѕС‚СЃРѕСЂС‚РёСЂРѕРІР°РЅС‹, РіР°СЂР°РЅС‚РёСЂРѕРІР°РЅРЅРѕ СЌС‚Рѕ СѓРіР»С‹ РѕРґРЅРѕР№ РєРѕРјРЅР°С‚С‹.
         const auto& crossoverPointI = intersectionPointsAndWallsTheyIntersectsOn[i].first;
         const auto& crossoverPointIPlus1 = intersectionPointsAndWallsTheyIntersectsOn[i + 1].first;
-        //Находим координаты точки посередине между ними.
+        //РќР°С…РѕРґРёРј РєРѕРѕСЂРґРёРЅР°С‚С‹ С‚РѕС‡РєРё РїРѕСЃРµСЂРµРґРёРЅРµ РјРµР¶РґСѓ РЅРёРјРё.
         double xMiddlePoint = (crossoverPointI.getX() + crossoverPointIPlus1.getX()) / 2;
         double yMiddlePoint = (crossoverPointI.getY() + crossoverPointIPlus1.getY()) / 2;
 
         Point doorPoint(xMiddlePoint, yMiddlePoint);
-        //Помимо точки - координаты двери - нам впослествии понадобится знать:
-        //1. На какой стене лежит эта дверь. В нашем случае, мы все двери ищем на this, поэтому сохраняем указатель на нее.
-        //2. Стены слева и справа - т.е. между какими двумя стенами находится наша дверь. Указатели на них так же сохраняем.
+        //РџРѕРјРёРјРѕ С‚РѕС‡РєРё - РєРѕРѕСЂРґРёРЅР°С‚С‹ РґРІРµСЂРё - РЅР°Рј РІРїРѕСЃР»РµСЃС‚РІРёРё РїРѕРЅР°РґРѕР±РёС‚СЃСЏ Р·РЅР°С‚СЊ:
+        //1. РќР° РєР°РєРѕР№ СЃС‚РµРЅРµ Р»РµР¶РёС‚ СЌС‚Р° РґРІРµСЂСЊ. Р’ РЅР°С€РµРј СЃР»СѓС‡Р°Рµ, РјС‹ РІСЃРµ РґРІРµСЂРё РёС‰РµРј РЅР° this, РїРѕСЌС‚РѕРјСѓ СЃРѕС…СЂР°РЅСЏРµРј СѓРєР°Р·Р°С‚РµР»СЊ РЅР° РЅРµРµ.
+        //2. РЎС‚РµРЅС‹ СЃР»РµРІР° Рё СЃРїСЂР°РІР° - С‚.Рµ. РјРµР¶РґСѓ РєР°РєРёРјРё РґРІСѓРјСЏ СЃС‚РµРЅР°РјРё РЅР°С…РѕРґРёС‚СЃСЏ РЅР°С€Р° РґРІРµСЂСЊ. РЈРєР°Р·Р°С‚РµР»Рё РЅР° РЅРёС… С‚Р°Рє Р¶Рµ СЃРѕС…СЂР°РЅСЏРµРј.
         auto dpwsl = new DoorPointWithSurroundingLines(doorPoint, this, intersectionPointsAndWallsTheyIntersectsOn[i].second, intersectionPointsAndWallsTheyIntersectsOn[i + 1].second);
         doorPoints.push_back(dpwsl);
     }
@@ -168,7 +168,7 @@ bool Wall::isEdgeLine() const {
 }
 
 bool Wall::arePointsOnTheSameSide(const Point& p1, const Point& p2) const {
-    //Точки лежат с одной стороны от прямой, если при подставлении их в уравнение прямой у результатов будут одинаковые знаки.
+    //РўРѕС‡РєРё Р»РµР¶Р°С‚ СЃ РѕРґРЅРѕР№ СЃС‚РѕСЂРѕРЅС‹ РѕС‚ РїСЂСЏРјРѕР№, РµСЃР»Рё РїСЂРё РїРѕРґСЃС‚Р°РІР»РµРЅРёРё РёС… РІ СѓСЂР°РІРЅРµРЅРёРµ РїСЂСЏРјРѕР№ Сѓ СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ Р±СѓРґСѓС‚ РѕРґРёРЅР°РєРѕРІС‹Рµ Р·РЅР°РєРё.
     auto v1 = a * p1.getX() + b * p1.getY() + c;
     auto v2 = a * p2.getX() + b * p2.getY() + c;
     return (v1 > 0 && v2 > 0) || (v1 < 0 && v2 < 0);
